@@ -1,0 +1,22 @@
+@import url('custom.css');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* [x-cloak] {
+    display: none;
+} */
+
+html {
+  font-size: 16px;
+}
+
+body {
+  background-color: #1f2937;
+  color: white;
+}
+
+:root {
+  scroll-behavior: smooth;
+}
