@@ -245,8 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = container.element.getBoundingClientRect();
 
         // Consider the fixed nav height (10vh)
-        const adjustedTop = rect.top + 0.3 * windowHeight;
-        const adjustedBottom = rect.bottom - 0.3 * windowHeight;
+        const adjustedTop = rect.top + 0.1 * windowHeight;
+        const adjustedBottom = rect.bottom - 0.2 * windowHeight;
 
         // Check if the container is in the viewport
         if (adjustedTop < windowHeight && adjustedBottom > 0) {
@@ -258,8 +258,55 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-
-
 });
 
+// Escuchar eventos para mostrar mensajes segun la ocasión
+Livewire.on('create', (event) => {
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    // background: '#333',
+    // color: '#fff',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+  });
+  Toast.fire({
+    icon: event.icon,
+    title: event.message
+  });
+});
 
+// Modal confirmación de eliminación
+Livewire.on('delete', (event) => {
+  Swal.fire({
+    title: "Está seguro?",
+    text: "Está acción no podrá revertirse!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, eliminar!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Livewire.dispatch('destroy', {id: event});
+    }
+  });
+});
+
+// Modal eliminacion para varios registros
+Livewire.on('deleteSelected', (event) => {
+  Swal.fire({
+    title: "Está seguro?",
+    text: "Está acción no podrá revertirse!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Si, eliminar!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Livewire.dispatch('destroyAll', {selected: event});
+    }
+  });
+});

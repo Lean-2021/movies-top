@@ -322,13 +322,14 @@ footer {
 .trend_container {
   position: relative;
   width: 200px;
+  max-height: 400px;
   overflow: hidden;
 }
 
 /* imágen de pelicula */
 .trend_image {
   width: 100%;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 15px;
   transition: all ease-in-out 300ms;
 }
@@ -877,8 +878,12 @@ input[type="date"] {
     span {
       @apply text-indigo-400;
     }
-  ;
   }
+
+}
+
+.table-flag {
+  display: none;
 }
 
 /* Login - Register */

@@ -13,18 +13,26 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer"/>
-
+  {{-- Estilos sweetalert dark --}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.css"/>
   <title>Movies Plus | {{ $title }}</title>
 
   {{-- <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
+  {{--  <style>--}}
+  {{--    [x-cloak] {--}}
+  {{--      display: none !important;--}}
+  {{--    }--}}
+  {{--  </style>--}}
+
 
   <!-- Scripts -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   <!-- Styles -->
   @livewireStyles
+
 </head>
 
 <body class="font-sans antialiased">
@@ -45,8 +53,8 @@
           </svg>
         </button>
         <a href="{{ route('dashboard') }}" class="flex ms-2 items-center md:me-24 link-nav-dashboard">
-          {{--          <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo"/>--}}
-          {{--          <img src="{{asset('images/film-ico.svg')}}" alt="movies plus" class="h-8 me-2 hover:link-nav-dashboard">--}}
+          {{--          <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo"/> --}}
+          {{--          <img src="{{asset('images/film-ico.svg')}}" alt="movies plus" class="h-8 me-2 hover:link-nav-dashboard"> --}}
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                stroke="currentColor" class="size-8 me-2">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -54,7 +62,8 @@
           </svg>
 
           <span
-            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Movies Plus</span>
+            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Movies
+                            Plus</span>
         </a>
       </div>
       <div class="flex items-center">
@@ -92,8 +101,8 @@
               </li>
               {{-- <li>
 <a href="{{ route('user-profile-information.update') }}"
-    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-    role="menuitem">Términos</a>
+class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+role="menuitem">Términos</a>
 </li> --}}
               <li>
                 <form method="POST" action="{{ route('logout') }}" x-data>
@@ -121,10 +130,11 @@
       {{--   Dashboard - principal   --}}
       <li>
         <a href="{{ route('dashboard') }}"
-           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ Route::is('dashboard') ? 'dark:text-blue-500' : '' }}">
+           class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('dashboard') ? 'dark:text-cyan-500 text-cyan-500 hover:text-white' : 'dark:text-white text-white' }}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor" class="w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900
-          dark:group-hover:text-white">
+               stroke="currentColor"
+               class="w-7 h-7 transition duration-75 group-hover:text-gray-900
+          dark:group-hover:text-white {{ request()->routeIs('dashboard') ? 'text-cyan-500 dark:text-cyan-500' : 'text-gray-400 dark:text-gray-400' }}">
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M9 17.25v1.007a3 3 0 0 1-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0 1 15 18.257V17.25m6-12V15a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 15V5.25m18 0A2.25 2.25 0 0 0 18.75 3H5.25A2.25 2.25 0 0 0 3 5.25m18 0V12a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 12V5.25"/>
           </svg>
@@ -148,8 +158,8 @@
       <li>
         <a href="#"
            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor"
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="1.5" stroke="currentColor"
                class="w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900
           dark:group-hover:text-white">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -159,24 +169,24 @@
         </a>
       </li>
       <li>
-        <a href="#"
-           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor"
-               class="w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900
-          dark:group-hover:text-white">
+        <a href="{{ route('directors') }}"
+           class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('directors') ? 'dark:text-cyan-500' : 'dark:text-white' }}">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="1.5" stroke="currentColor"
+               class="w-7 h-7 transition duration-75 group-hover:text-gray-900
+          dark:group-hover:text-white {{ request()->routeIs('directors') ? 'dark:text-cyan-500' : 'dark:text-gray-400' }}">
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
           </svg>
           <span class="flex-1 ms-3 whitespace-nowrap">Directores</span>
         </a>
       </li>
-      {{-- Estudios--}}
+      {{-- Estudios --}}
       <li>
         <a href="#"
            class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor"
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="1.5" stroke="currentColor"
                class="w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900
           dark:group-hover:text-white">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -185,14 +195,14 @@
           <span class="flex-1 ms-3 whitespace-nowrap">Estudios</span>
         </a>
       </li>
-      {{-- Actores--}}
+      {{-- Actores --}}
       <li>
-        <a href="#"
-           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor"
-               class="w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900
-          dark:group-hover:text-white">
+        <a href="{{route('actors')}}"
+           class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('actors') ? 'dark:text-cyan-500' : 'dark:text-white' }}">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="1.5" stroke="currentColor"
+               class="w-7 h-7 text-gray-500 transition duration-75 group-hover:text-gray-900
+          dark:group-hover:text-white {{ request()->routeIs('actors') ? 'dark:text-cyan-500' : 'dark:text-white' }}">
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/>
           </svg>
@@ -203,23 +213,23 @@
       <div class="border-b-[1px] border-gray-600 h-5"></div>
       {{-- Sitio Principal   --}}
       <li>
-        <a href="{{route('home')}}"
+        <a href="{{ route('home') }}"
            class="flex items-center mt-5 p-2 text-gray-900 bg-gray-700 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-600 group">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-               stroke="currentColor"
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="1.5" stroke="currentColor"
                class="flex-shrink-0 w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 dark:group-hover:text-gray-900">
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15"/>
           </svg>
 
 
-          {{--          <svg--}}
-          {{--            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"--}}
-          {{--            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"--}}
-          {{--            viewBox="0 0 20 18">--}}
-          {{--            <path--}}
-          {{--              d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>--}}
-          {{--          </svg>--}}
+          {{--          <svg --}}
+          {{--            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" --}}
+          {{--            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" --}}
+          {{--            viewBox="0 0 20 18"> --}}
+          {{--            <path --}}
+          {{--              d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/> --}}
+          {{--          </svg> --}}
           <span class="flex-1 ms-3 mt-1 whitespace-nowrap">Movies Plus</span>
         </a>
       </li>
@@ -231,14 +241,17 @@
 
 
 {{-- <!-- Page Content --> --}}
-<main
-  class="sm:ms-[16rem] sm:w-[calc(100%-16rem)] mt-20 sm:mt-16 px-5">
+<main class="sm:ms-[16rem] sm:w-[calc(100%-16rem)] mt-20 sm:mt-16 px-5">
   {{ $slot }}
 </main>
 
 @stack('modals')
+{{-- script sweetalert  --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
+{{--<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>--}}
 @livewireScripts
+
 </body>
 
 </html>
