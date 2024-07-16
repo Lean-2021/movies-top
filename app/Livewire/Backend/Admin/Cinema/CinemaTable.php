@@ -1,23 +1,23 @@
 <?php
 
-  namespace App\Livewire\Backend\Admin\Actor;
+  namespace App\Livewire\Backend\Admin\Cinema;
 
-  use App\Livewire\Backend\Admin\director\Directors;
   use App\Models\Country;
   use Livewire\Attributes\On;
   use Rappasoft\LaravelLivewireTables\DataTableComponent;
   use Rappasoft\LaravelLivewireTables\Views\Column;
-  use App\Models\Actor;
+  use App\Models\Cinema;
+  use App\Livewire\Backend\Admin\Cinema\Cinemas;
   use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
   use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
   use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectDropdownFilter;
   use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
   use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 
-  class ActorTable extends DataTableComponent
+  class CinemaTable extends DataTableComponent
   {
-    protected $model = Actor::class;
-    protected $actor;
+    protected $model = Cinema::class;
+    protected $cinema;
 
     public function configure(): void
     {
@@ -38,7 +38,7 @@
     public function reorder(array $items): void
     {
       foreach ($items as $item) {
-        Actor::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
+        Cinema::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
       }
     }
 
@@ -77,16 +77,6 @@
               $query->whereIn('country_id', $values);
             });
           }),
-
-        // buscar por apellido
-        TextFilter::make('Apellido')
-          ->config([
-            'placeholder' => 'Buscar por apellido',
-            'maxlength' => '25',
-          ])
-          ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, string $value) {
-            $builder->where('last_name', 'like', '%' . $value . '%');
-          }),
       ];
     }
 
@@ -100,10 +90,10 @@
       ];
     }
 
-    // LLamar al método edit del controlador actor
+    // LLamar al método edit del controlador director
     public function edit($row)
     {
-      $this->dispatch('edit', $row)->to(Actors::class);
+      $this->dispatch('edit', $row)->to(Cinemas::class);
     }
 
     public function delete()
@@ -120,9 +110,9 @@
     {
       try {
         foreach ($selected as $item) {
-          Actor::destroy($item);
+          Cinema::destroy($item);
         };
-        $this->dispatch('create', message: 'Actores eliminados', icon: 'success');
+        $this->dispatch('create', message: 'Estudios eliminados', icon: 'success');
         // deseleccionar todos los elementos
         $this->clearSelected();
       } catch (\Throwable $th) {
@@ -136,8 +126,8 @@
     {
       try {
         foreach ($this->getSelected() as $item) {
-          $director = Actor::find($item);
-          $director->update([
+          $cinema = Cinema::find($item);
+          $cinema->update([
             'status' => 0
           ]);
         }
@@ -152,13 +142,10 @@
     // poner estados activos
     public function statusOn()
     {
-      // Director::query()->update([
-      //   'status' => 1,
-      // ]);
       try {
         foreach ($this->getSelected() as $item) {
-          $director = Actor::find($item);
-          $director->update([
+          $cinema = Cinema::find($item);
+          $cinema->update([
             'status' => 1
           ]);
         }
@@ -173,18 +160,15 @@
     // construir la tabla directores
     public function columns(): array
     {
-      $this->actor = Actor::all();
+      $this->cinema = Cinema::all();
       return [
         Column::make("Id", "id")
           ->sortable(),
-        Column::make("Nombre", "first_name")
-          ->sortable()
-          ->searchable(),
-        Column::make("Apellido", "last_name")
+        Column::make("Nombre", "name")
           ->sortable()
           ->searchable(),
         ImageColumn::make('Bandera')
-          ->location(fn($row) => asset('storage/flags/' . $this->actor->find($row->id)->country->flag))
+          ->location(fn($row) => asset('storage/flags/' . $this->cinema->find($row->id)->country->flag))
           ->attributes(fn($row) => [
             'class' => 'w-16 object-cover',
           ]),
@@ -197,9 +181,10 @@
         Column::make("Acciones")
           ->label(
             function ($row) {
-              return view('livewire.backend.admin.actor.actors-actions', ['row' => $row->id, 'actor' => $this->actor->find($row->id),]);
+              return view('livewire.backend.admin.cinema.cinemas-actions', ['row' => $row->id, 'cinema' => $this->cinema->find($row->id),]);
             }
           ),
       ];
     }
+
   }

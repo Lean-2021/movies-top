@@ -28,4 +28,10 @@
     {
       return $this->hasMany(Actor::class, 'country_id', 'id');
     }
+
+    // Relación tabla cinemas
+    public function cinemas()
+    {
+      return $this->hasMany(Cinema::class, 'country_id', 'id');
+    }
   }

@@ -1,34 +1,32 @@
 <?php
 
-  namespace App\Livewire\Backend\Admin\Actor;
+  namespace App\Livewire\Backend\Admin\Cinema;
 
-  use App\Livewire\Backend\Admin\Actor\ActorTable;
-  use App\Models\Actor;
+  use App\Models\Cinema;
   use App\Models\Country;
-  use App\Rules\UniqueActor;
   use Livewire\Attributes\On;
   use Livewire\Component;
+  use App\Livewire\Backend\Admin\Cinema\CinemaTable;
 
-  class Actors extends Component
+  class Cinemas extends Component
   {
     public $openModal = false;
-    public $actor_id = '';
-    public $action, $first_name, $last_name, $country_id, $status, $order;
+    public $cinema_id = '';
+    public $action, $name, $country_id, $status, $order;
 
     public function render()
     {
       $countries = Country::all();
-      return view('livewire.backend.admin.actor.actors',
-        ['countries' => $countries])
-        ->layout('layouts.dashboard');
+      return view('livewire.backend.admin.cinema.cinemas', [
+        'countries' => $countries,
+      ])->layout('layouts.dashboard');
     }
 
     // Validaciones
     public function rules()
     {
       return [
-        'first_name' => ['required', 'min:3', 'max:100', 'regex:/^[a-zA-Z\s]+$/', new UniqueActor($this->first_name, $this->last_name, $this->country_id)],
-        'last_name' => 'required|min:3|max:100|regex:/^[a-zA-Z\s]+$/',
+        'name' => $this->action === 'create' ? 'required|min:3|max:254|unique:cinemas,name' : 'required|min:3|max:254|unique:cinemas,name,' . $this->cinema_id,
         'country_id' => 'required|exists:countries,id',
       ];
     }
@@ -37,14 +35,10 @@
     public function messages()
     {
       return [
-        'first_name.required' => 'Ingrese un nombre',
-        'first_name.min' => 'Ingrese al menos 3 caracteres',
-        'first_name.max' => 'Máximo premitido de caracteres 100',
-        'first_name.regex' => 'Ingrese un nombre válido',
-        'last_name.required' => 'Ingrese un apellido',
-        'last_name.min' => 'Ingrese al menos 3 caracteres',
-        'last_name.max' => 'Máximo premitido de caracteres 100',
-        'last_name.regex' => 'Ingrese un apellido válido',
+        'name.required' => 'Ingrese un nombre',
+        'name.min' => 'Ingrese al menos 3 caracteres',
+        'name.max' => 'Máximo premitido de caracteres 254',
+        'name.unique' => 'Ya existe un estudio con ese nombre',
         'country_id.required' => 'Seleccione un páis',
         'country_id.exists' => 'Seleccione un país válido',
       ];
@@ -63,13 +57,12 @@
     public function edit($id)
     {
       $this->action = 'edit';
-      $actor = Actor::findOrFail($id);
-      $this->actor_id = $actor->id;
-      $this->first_name = $actor->first_name;
-      $this->last_name = $actor->last_name;
-      $this->country_id = $actor->country_id;
-      $this->status = $actor->status;
-      $this->order = $actor->order;
+      $cinema = Cinema::findOrFail($id);
+      $this->cinema_id = $cinema->id;
+      $this->name = $cinema->name;
+      $this->country_id = $cinema->country_id;
+      $this->status = $cinema->status;
+      $this->order = $cinema->order;
       $this->showModal();
     }
 
@@ -80,11 +73,10 @@
       $this->validate();
       // guardamos o actualizamos según la ocasión
       try {
-        Actor::updateOrCreate([
-          'id' => $this->actor_id
+        Cinema::updateOrCreate([
+          'id' => $this->cinema_id
         ], [
-          'first_name' => $this->first_name,
-          'last_name' => $this->last_name,
+          'name' => $this->name,
           'country_id' => $this->country_id,
           'status' => 1
         ]);
@@ -93,19 +85,19 @@
         //limpiar campos
         $this->cleanFields();
         // Refrescar tabla
-        $this->dispatch('refreshDatatable')->to(ActorTable::class);
+        $this->dispatch('refreshDatatable')->to(CinemaTable::class);
         // Mensajes de creación ó actualización según la ocasión
         if ($this->action === 'create') {
-          $this->dispatch('create', message: 'Actor creado', icon: 'success');
+          $this->dispatch('create', message: 'Estudio creado', icon: 'success');
         } else if ($this->action === 'edit') {
-          $this->dispatch('create', message: 'Actor modificado', icon: 'success');
+          $this->dispatch('create', message: 'Estudio modificado', icon: 'success');
         }
       } catch (\Throwable $th) {
 //        dd($th->getMessage());
         if ($this->action === 'create') {
-          $this->dispatch('create', message: 'No se puedo crear el actor', icon: 'error');
+          $this->dispatch('create', message: 'No se puedo crear el estudio', icon: 'error');
         } else if ($this->action === 'edit') {
-          $this->dispatch('create', message: 'No se pudo modificar el actor', icon: 'error');
+          $this->dispatch('create', message: 'No se pudo modificar el estudio', icon: 'error');
         }
         // cerrar modal
         $this->closeModal();
@@ -118,23 +110,22 @@
     public function destroy($id)
     {
       try {
-        Actor::destroy($id);
+        Cinema::destroy($id);
         // actualizar tabla
-        $this->dispatch('refreshDatatable')->to(ActorTable::class);
+        $this->dispatch('refreshDatatable')->to(CinemaTable::class);
         // mostrar mensaje eliminacion correcta
-        $this->dispatch('create', message: 'Actor eliminado', icon: 'success');
+        $this->dispatch('create', message: 'Estudio eliminado', icon: 'success');
       } catch (\Throwable $th) {
 //        dd($th->getMessage());
-        $this->dispatch('create', message: 'No se pudo eliminar el actor', icon: 'error');
+        $this->dispatch('create', message: 'No se pudo eliminar el estudio', icon: 'error');
       }
     }
 
     // limpiar campos - order y status se podrian obviar ya que no se ingresan, por el momento se deja
     public function cleanFields()
     {
-      $this->actor_id = '';
-      $this->first_name = '';
-      $this->last_name = '';
+      $this->cinema_id = '';
+      $this->name = '';
       $this->country_id = '';
       $this->status = '';
       $this->order = '';

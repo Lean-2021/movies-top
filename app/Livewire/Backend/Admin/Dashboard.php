@@ -3,6 +3,7 @@
   namespace App\Livewire\Backend\Admin;
 
   use App\Models\Actor;
+  use App\Models\Cinema;
   use App\Models\Director;
   use Livewire\Component;
 
@@ -12,9 +13,11 @@
     {
       $directors = Director::all();
       $actors = Actor::all();
+      $cinemas = Cinema::all();
       return view('livewire.backend.admin.dashboard', [
         'directors' => $directors,
-        'actors' => $actors
+        'actors' => $actors,
+        'cinemas' => $cinemas
       ])->layout('layouts.dashboard');
     }
   }

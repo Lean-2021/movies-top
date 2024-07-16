@@ -88,10 +88,10 @@
       <div class="flex items-end justify-between mb-2">
         <h5 class="text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Estudios
         </h5>
-        <span class="text-3xl font-semibold">0</span>
+        <span class="text-3xl font-semibold">{{count($cinemas)}}</span>
       </div>
       {{--    <p class="mb-3 font-normal text-gray-500 dark:text-slate-200">Panel de administración de películas</p>--}}
-      <a href="#" class="inline-flex font-medium items-center text-slate-100 hover:underline">
+      <a href="{{route('cinemas')}}" class="inline-flex font-medium items-center text-slate-100 hover:underline">
         Ver detalles
         <svg class="w-3 h-3 ms-2.5 rtl:rotate-[270deg]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
              fill="none" viewBox="0 0 18 18">

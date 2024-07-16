@@ -63,7 +63,7 @@
             }
           }),
 
-
+        // ordenar por pais
         MultiSelectDropdownFilter::make('País')
           ->options(
             Country::query()
@@ -80,8 +80,7 @@
             });
           }),
 
-
-        // ordenar por pais
+        // Buscar por apellido
         TextFilter::make('Apellido')
           ->config([
             'placeholder' => 'Buscar por apellido',
@@ -90,8 +89,6 @@
           ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, string $value) {
             $builder->where('last_name', 'like', '%' . $value . '%');
           }),
-
-
       ];
     }
 
