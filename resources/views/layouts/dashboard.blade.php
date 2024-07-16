@@ -155,19 +155,21 @@ role="menuitem">Términos</a>
           <span class="flex-1 ms-3 whitespace-nowrap">Peliculas</span>
         </a>
       </li>
+      {{-- Géneros--}}
       <li>
-        <a href="#"
-           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+        <a href="{{route('genres')}}"
+           class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('genres') ? 'dark:text-cyan-500 text-cyan-500 hover:text-white' : 'dark:text-white text-white' }}">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                stroke-width="1.5" stroke="currentColor"
-               class="w-7 h-7 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900
-          dark:group-hover:text-white">
+               class="w-7 h-7 transition duration-75 group-hover:text-gray-900
+          dark:group-hover:text-white {{ request()->routeIs('genres') ? 'text-cyan-500 dark:text-cyan-500' : 'text-gray-400 dark:text-gray-400' }}">
             <path stroke-linecap="round" stroke-linejoin="round"
                   d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/>
           </svg>
           <span class="flex-1 ms-3 whitespace-nowrap">Géneros</span>
         </a>
       </li>
+      {{--Directores--}}
       <li>
         <a href="{{ route('directors') }}"
            class="flex items-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('directors') ? 'dark:text-cyan-500' : 'dark:text-white' }}">
@@ -209,7 +211,6 @@ role="menuitem">Términos</a>
           <span class="flex-1 ms-3 whitespace-nowrap">Actores</span>
         </a>
       </li>
-
       <div class="border-b-[1px] border-gray-600 h-5"></div>
       {{-- Sitio Principal   --}}
       <li>

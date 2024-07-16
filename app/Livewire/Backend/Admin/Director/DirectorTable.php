@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Livewire\Backend\Admin\Actor;
+namespace App\Livewire\Backend\Admin\Director;
 
 use App\Models\Country;
+use App\Models\Director;
 use Livewire\Attributes\On;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use App\Models\Actor;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectDropdownFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\TextFilter;
 
-class ActorTable extends DataTableComponent
+class DirectorTable extends DataTableComponent
 {
-  protected $model = Actor::class;
-  protected $actor;
+  protected $model = Director::class;
+  protected $director;
 
   public function configure(): void
   {
@@ -37,7 +37,7 @@ class ActorTable extends DataTableComponent
   public function reorder(array $items): void
   {
     foreach ($items as $item) {
-      Actor::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
+      Director::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
     }
   }
 
@@ -77,7 +77,7 @@ class ActorTable extends DataTableComponent
           });
         }),
 
-      // buscar por apellido
+      // Buscar por apellido
       TextFilter::make('Apellido')
         ->config([
           'placeholder' => 'Buscar por apellido',
@@ -99,10 +99,10 @@ class ActorTable extends DataTableComponent
     ];
   }
 
-  // LLamar al método edit del controlador actor
+  // LLamar al método edit del controlador director
   public function edit($row)
   {
-    $this->dispatch('edit', $row)->to(Actors::class);
+    $this->dispatch('edit', $row)->to(Directors::class);
   }
 
   public function delete()
@@ -119,9 +119,9 @@ class ActorTable extends DataTableComponent
   {
     try {
       foreach ($selected as $item) {
-        Actor::destroy($item);
+        Director::destroy($item);
       };
-      $this->dispatch('create', message: 'Actores eliminados', icon: 'success');
+      $this->dispatch('create', message: 'Directores eliminados', icon: 'success');
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
@@ -133,9 +133,12 @@ class ActorTable extends DataTableComponent
   // poner estados inactivos
   public function statusOff()
   {
+    // Director::query()->update([
+    //   'status' => 0,
+    // ]);
     try {
       foreach ($this->getSelected() as $item) {
-        $director = Actor::find($item);
+        $director = Director::find($item);
         $director->update([
           'status' => 0
         ]);
@@ -156,7 +159,7 @@ class ActorTable extends DataTableComponent
     // ]);
     try {
       foreach ($this->getSelected() as $item) {
-        $director = Actor::find($item);
+        $director = Director::find($item);
         $director->update([
           'status' => 1
         ]);
@@ -172,7 +175,7 @@ class ActorTable extends DataTableComponent
   // construir la tabla directores
   public function columns(): array
   {
-    $this->actor = Actor::all();
+    $this->director = Director::all();
     return [
       Column::make("Id", "id")
         ->sortable(),
@@ -183,7 +186,7 @@ class ActorTable extends DataTableComponent
         ->sortable()
         ->searchable(),
       ImageColumn::make('Bandera')
-        ->location(fn($row) => asset('storage/flags/' . $this->actor->find($row->id)->country->flag))
+        ->location(fn($row) => asset('storage/flags/' . $this->director->find($row->id)->country->flag))
         ->attributes(fn($row) => [
           'class' => 'w-16 object-cover',
         ]),
@@ -196,7 +199,7 @@ class ActorTable extends DataTableComponent
       Column::make("Acciones")
         ->label(
           function ($row) {
-            return view('livewire.backend.admin.actor.actors-actions', ['row' => $row->id, 'actor' => $this->actor->find($row->id),]);
+            return view('livewire.backend.admin.directors.directors-actions', ['row' => $row->id, 'director' => $this->director->find($row->id),]);
           }
         ),
     ];
