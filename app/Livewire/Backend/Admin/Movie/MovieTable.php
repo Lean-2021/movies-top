@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Livewire\Backend\Admin\Genre;
+namespace App\Livewire\Backend\Admin\Movie;
 
-use App\Livewire\Backend\Admin\Cinema\Cinemas;
-use App\Models\Genre;
+use App\Models\Country;
 use Livewire\Attributes\On;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use App\Models\Movie;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectDropdownFilter;
 use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
 
-class GenreTable extends DataTableComponent
+class MovieTable extends DataTableComponent
 {
-  protected $model = Genre::class;
-  protected $genre;
+  protected $model = Movie::class;
+  protected $movie;
 
   public function configure(): void
   {
@@ -36,7 +36,7 @@ class GenreTable extends DataTableComponent
   public function reorder(array $items): void
   {
     foreach ($items as $item) {
-      Genre::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
+      Movie::find($item[$this->getPrimaryKey()])->update(['order' => (int)$item[$this->getDefaultReorderColumn()]]);
     }
   }
 
@@ -58,6 +58,23 @@ class GenreTable extends DataTableComponent
             $builder->where('status', 0);
           }
         }),
+
+      // ordenar por pais
+      MultiSelectDropdownFilter::make('País')
+        ->options(
+          Country::query()
+            ->orderBy('name')
+            ->get()
+            ->keyBy('id')
+            ->map(fn($tag) => $tag->name)
+            ->toArray()
+        )
+        ->setFirstOption('Todos los paises')
+        ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, $values) {
+          $builder->whereHas('country', function ($query) use ($values) {
+            $query->whereIn('country_id', $values);
+          });
+        }),
     ];
   }
 
@@ -74,7 +91,7 @@ class GenreTable extends DataTableComponent
   // LLamar al método edit del controlador director
   public function edit($row)
   {
-    $this->dispatch('edit', $row)->to(Genres::class);
+    $this->dispatch('edit', $row)->to(Movies::class);
   }
 
   public function delete()
@@ -91,13 +108,13 @@ class GenreTable extends DataTableComponent
   {
     try {
       foreach ($selected as $item) {
-        Genre::destroy($item);
+        Movie::destroy($item);
       };
-      $this->dispatch('create', message: 'Géneros eliminados', icon: 'success');
+      $this->dispatch('create', message: 'Películas eliminadas', icon: 'success');
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron eliminar los registros', icon: 'error');
     }
   }
@@ -107,15 +124,15 @@ class GenreTable extends DataTableComponent
   {
     try {
       foreach ($this->getSelected() as $item) {
-        $genre = Genre::find($item);
-        $genre->update([
+        $director = Movie::find($item);
+        $director->update([
           'status' => 0
         ]);
       }
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
   }
@@ -125,37 +142,71 @@ class GenreTable extends DataTableComponent
   {
     try {
       foreach ($this->getSelected() as $item) {
-        $genre = Genre::find($item);
-        $genre->update([
+        $director = Movie::find($item);
+        $director->update([
           'status' => 1
         ]);
       }
       // deseleccionar elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
   }
 
-  // construir la tabla directores
   public function columns(): array
   {
-    $this->genre = Genre::all();
+    $this->movie = Movie::all();
     return [
       Column::make("Id", "id")
         ->sortable(),
-      Column::make("Nombre", "name")
-        ->sortable()
-        ->searchable(),
+      Column::make("Título", "title")
+        ->sortable(),
+      Column::make("Descripción", "description")
+        ->sortable(),
+      Column::make("Género/s", "genre_id")
+        ->sortable(),
+      Column::make("Idioma", "language_id")
+        ->sortable(),
+      Column::make("Duración", "duration")
+        ->sortable(),
+      Column::make("Año", "year")
+        ->sortable(),
+      Column::make("Votos", "votes")
+        ->sortable(),
+      Column::make("Sección", "section")
+        ->sortable(),
+      ImageColumn::make("Imagen", "image")
+        ->location(fn($row) => asset('storage/movies/image'))
+        ->attributes(fn($row) => [
+          'class' => 'w-16 object-cover',
+        ]),
+      Column::make("Image url", "image_url")
+        ->isHidden(),
+      Column::make("Image url id", "image_url_id")
+        ->isHidden(),
+      Column::make("Actores", "actor_id")
+        ->sortable(),
+      Column::make("Director", "director_id")
+        ->sortable(),
+      Column::make("Estudio", "cinema_id")
+        ->sortable(),
+      Column::make("País", "country_id")
+        ->sortable(),
       Column::make("Orden", "order")
         ->sortable(),
       BooleanColumn::make("Activo", "status")
         ->sortable(),
+      ImageColumn::make('Bandera')
+        ->location(fn($row) => asset('storage/flags/' . $this->movie->find($row->id)->country->flag))
+        ->attributes(fn($row) => [
+          'class' => 'w-16 object-cover',
+        ]),
       Column::make("Acciones")
         ->label(
           function ($row) {
-            return view('livewire.backend.admin.genre.genres-actions', ['row' => $row->id]);
+            return view('livewire.backend.admin.movie.movies-actions', ['row' => $row->id, 'movie' => $this->movie->find($row->id),]);
           }
         ),
     ];

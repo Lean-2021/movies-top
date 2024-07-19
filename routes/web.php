@@ -5,6 +5,7 @@ use App\Livewire\Backend\Admin\Director\Directors;
 use App\Livewire\Backend\Admin\Actor\Actors;
 use App\Livewire\Backend\Admin\Cinema\Cinemas;
 use App\Livewire\Backend\Admin\Genre\Genres;
+use App\Livewire\Backend\Admin\Movie\Movies;
 use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,6 @@ Route::middleware([
   Route::get('/estudios', Cinemas::class)->name('cinemas');
   // Generos
   Route::get('generos', Genres::class)->name('genres');
+  // Peliculas
+  Route::get('/peliculas', Movies::class)->name('movies');
 });
