@@ -15,7 +15,6 @@ class Movie extends Model
   protected $fillable = [
     'title',
     'description',
-    'genre_id',
     'language_id',
     'duration',
     'year',
@@ -24,8 +23,6 @@ class Movie extends Model
     'image',
     'image_url',
     'image_url_id',
-    'actor_id',
-    'director_id',
     'cinema_id',
     'country_id',
     'order',

@@ -4,14 +4,19 @@
   margin: 0;
   padding: 0;
   font-family: "nunito", sans-serif;
+  /*scrollbar-color: #9f3647 transparent;*/
+  /*scrollbar-width: thin;*/
+}
+
+.html_front {
   scrollbar-color: #9f3647 transparent;
   scrollbar-width: thin;
 }
 
-/* html {
-    scroll-behavior: smooth;
-    font-size: 16px;
-} */
+.html_back {
+  scrollbar-color: #03738c transparent;
+  scrollbar-width: thin;
+}
 
 :root {
   scroll-behavior: smooth;

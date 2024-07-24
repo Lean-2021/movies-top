@@ -5,29 +5,53 @@ namespace App\Livewire\Backend\Admin\Movie;
 use App\Livewire\Backend\Admin\Director\DirectorTable;
 use App\Models\Country;
 use App\Models\Director;
+use App\Models\Genre;
+use App\Models\Language;
 use App\Rules\UniqueDirector;
+use App\Rules\UniqueMovie;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Movies extends Component
 {
   public $openModal = false;
+  public $imagePreview = false;
   public $movie_id = '';
-  public $action, $title, $description, $genre_id, $language_id, $duration, $year, $votes, $section, $image, $actor_id, $director_id, $cinema_id, $country_id, $status, $order;
+  public $action, $title, $description, $language_id, $duration, $year, $votes, $section, $image, $cinema_id, $country_id, $status, $order;
+  public $genres = [];
+  public $actors = [];
+  public $directors = [];
 
+
+  #[Layout('layouts.dashboard')]
   public function render()
   {
     $countries = Country::all();
+    $genres = Genre::all();
+    $languages = Language::all();
     return view('livewire.backend.admin.movie.movies', [
       'countries' => $countries,
-    ])->layout('layouts.dashboard');
+      'genres' => $genres,
+      'languages' => $languages,
+    ]);
   }
 
   public function rules()
   {
     return [
-      'first_name' => ['required', 'min:3', 'max:100', 'regex:/^[a-zA-Z\s]+$/', new UniqueDirector($this->first_name, $this->last_name, $this->country_id)],
-      'last_name' => 'required|min:3|max:100|regex:/^[a-zA-Z\s]+$/',
+      'title' => $this->action === 'create' ? ['required', 'min:2', new UniqueMovie([
+        'title' => $this->title,
+        'description' => $this->description,
+        'language_id' => $this->language_id,
+        'duration' => $this->duration,
+        'year' => $this->year,
+        'section' => $this->section,
+        'cinema_id' => $this->cinema_id,
+        'country_id' => $this->country_id
+      ])] : 'required|min:2',
+      'description' => 'required',
+      'language_id' => 'required|exists:languages,id',
       'country_id' => 'required|exists:countries,id',
     ];
   }
@@ -131,10 +155,10 @@ class Movies extends Component
 
   public function cleanFields()
   {
-    $this->director_id = '';
-    $this->first_name = '';
-    $this->last_name = '';
-    $this->country_id = '';
+    $this->title = '';
+    $this->description = '';
+    $this->genres = [];
+    $this->language_id = '';
     $this->status = '';
     $this->order = '';
     $this->resetErrorBag();

@@ -14,7 +14,6 @@
         "rappasoft/laravel-livewire-tables": "^3.3"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.13",
         "fakerphp/faker": "^1.23",
         "laravel-lang/lang": "^15.5",
         "laravel/pint": "^1.13",
