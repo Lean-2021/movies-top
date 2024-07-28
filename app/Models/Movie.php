@@ -28,4 +28,37 @@ class Movie extends Model
     'order',
     'status',
   ];
+
+  // númer de orden autoincremental
+  public static function boot()
+  {
+    parent::boot();
+    static::creating(function ($model) {
+      $model->order = Movie::max('order') + 1;
+    });
+  }
+
+  // relación tabla lenguajes
+  public function language()
+  {
+    return $this->belongsTo(Language::class, 'languages', 'id');
+  }
+
+  // relación tabla estudios
+  public function cinema()
+  {
+    return $this->belongsTo(Cinema::class, 'cinemas', 'id');
+  }
+
+  // relación tabla paises
+  public function country()
+  {
+    return $this->belongsTo(Country::class, 'countries', 'id');
+  }
+
+  // relación tabla generos
+  public function genres()
+  {
+    return $this->belongsToMany(Genre::class, 'genre_movie');
+  }
 }

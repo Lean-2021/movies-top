@@ -15,17 +15,14 @@ return new class extends Migration
       $table->id();
       $table->string('title');
       $table->text('description');
-      $table->foreignId('genre_id')->constrained('genres', 'id');
       $table->foreignId('language_id')->constrained('languages', 'id');
       $table->integer('duration');
       $table->integer('year');
-      $table->bigInteger('votes');
+      $table->bigInteger('votes')->nullable();
       $table->enum('section', ['general', 'novedades', 'tendencias', 'aclamadas'])->default('general');
       $table->string('image', 80);
       $table->string('image_url')->nullable();
       $table->string('image_url_id')->nullable();
-      $table->foreignId('actor_id')->constrained('actors', 'id');
-      $table->foreignId('director_id')->constrained('directors', 'id');
       $table->foreignId('cinema_id')->constrained('cinemas', 'id');
       $table->foreignId('country_id')->constrained('countries', 'id');
       $table->integer('order')->nullable();

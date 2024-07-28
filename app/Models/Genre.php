@@ -25,4 +25,9 @@ class Genre extends Model
       $model->order = Genre::max('order') + 1;
     });
   }
+
+  public function movies()
+  {
+    return $this->belongsToMany(Movie::class, 'genre_movie');
+  }
 }

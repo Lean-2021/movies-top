@@ -66,7 +66,7 @@ class MovieTable extends DataTableComponent
             ->orderBy('name')
             ->get()
             ->keyBy('id')
-            ->map(fn($tag) => $tag->name)
+            ->map(fn ($tag) => $tag->name)
             ->toArray()
         )
         ->setFirstOption('Todos los paises')
@@ -162,34 +162,43 @@ class MovieTable extends DataTableComponent
       Column::make("Id", "id")
         ->sortable(),
       Column::make("Título", "title")
-        ->sortable(),
+        ->sortable()
+        ->searchable(),
       Column::make("Descripción", "description")
         ->sortable(),
-      Column::make("Género/s", "genre_id")
-        ->sortable(),
+      Column::make("Género/s")
+        ->label(fn ($row) => implode(' | ', $row->genres()->pluck('name')->toArray()))
+        ->searchable(),
       Column::make("Idioma", "language_id")
-        ->sortable(),
+        ->sortable()
+        ->searchable(),
       Column::make("Duración", "duration")
         ->sortable(),
       Column::make("Año", "year")
-        ->sortable(),
+        ->sortable()
+        ->searchable(),
       Column::make("Votos", "votes")
         ->sortable(),
       Column::make("Sección", "section")
         ->sortable(),
-      ImageColumn::make("Imagen", "image")
-        ->location(fn($row) => asset('storage/movies/image'))
-        ->attributes(fn($row) => [
-          'class' => 'w-16 object-cover',
+      ImageColumn::make("Imagen", 'image')
+        ->location(
+          function ($row) {
+            $movie = Movie::findOrFail($row->id);
+            return $movie->image && asset('storage/movies/' . $movie->image) ? asset('storage/movies/' . $movie->image) : asset('images/no-available.png');
+          }
+        )
+        ->attributes(fn ($row) => [
+          'class' => 'w-10 h-10 object-cover',
         ]),
       Column::make("Image url", "image_url")
         ->isHidden(),
       Column::make("Image url id", "image_url_id")
         ->isHidden(),
-      Column::make("Actores", "actor_id")
-        ->sortable(),
-      Column::make("Director", "director_id")
-        ->sortable(),
+      // Column::make("Actores", "actor_id")
+      //   ->sortable(),
+      // Column::make("Director", "director_id")
+      //   ->sortable(),
       Column::make("Estudio", "cinema_id")
         ->sortable(),
       Column::make("País", "country_id")
@@ -198,11 +207,6 @@ class MovieTable extends DataTableComponent
         ->sortable(),
       BooleanColumn::make("Activo", "status")
         ->sortable(),
-      ImageColumn::make('Bandera')
-        ->location(fn($row) => asset('storage/flags/' . $this->movie->find($row->id)->country->flag))
-        ->attributes(fn($row) => [
-          'class' => 'w-16 object-cover',
-        ]),
       Column::make("Acciones")
         ->label(
           function ($row) {
