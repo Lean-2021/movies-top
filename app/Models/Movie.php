@@ -41,24 +41,36 @@ class Movie extends Model
   // relación tabla lenguajes
   public function language()
   {
-    return $this->belongsTo(Language::class, 'languages', 'id');
+    return $this->belongsTo(Language::class, 'language_id', 'id');
   }
 
   // relación tabla estudios
   public function cinema()
   {
-    return $this->belongsTo(Cinema::class, 'cinemas', 'id');
+    return $this->belongsTo(Cinema::class, 'cinema_id', 'id');
   }
 
   // relación tabla paises
   public function country()
   {
-    return $this->belongsTo(Country::class, 'countries', 'id');
+    return $this->belongsTo(Country::class, 'country_id', 'id');
   }
 
   // relación tabla generos
   public function genres()
   {
     return $this->belongsToMany(Genre::class, 'genre_movie');
+  }
+
+  // relación tabla actores
+  public function actors()
+  {
+    return $this->belongsToMany(Actor::class, 'actor_movie');
+  }
+
+  // relación tabla directores
+  public function directors()
+  {
+    return $this->belongsToMany(Director::class, 'director_movie');
   }
 }

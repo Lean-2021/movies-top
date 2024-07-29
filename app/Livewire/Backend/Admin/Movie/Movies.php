@@ -94,7 +94,7 @@ class Movies extends Component
       'directors' => 'required|array',
       'directors.*' => 'exists:directors,id|integer',
       'cinema_id' => 'required|exists:cinemas,id',
-      'image' => 'nullable|mimes:svg,png,jpg,jpeg|max:1024|dimensions:min_width=500,min_height=500'
+      'image' => $this->action === 'edit' && !$this->imagePreview ? 'nullable' : 'nullable|mimes:svg,png,jpg,jpeg|max:1024|dimensions:min_width=500,min_height=500'
     ];
   }
 
@@ -170,13 +170,15 @@ class Movies extends Component
     $this->cinema_id = $movie->cinema_id;
     $this->country_id = $movie->country_id;
     $this->image = $movie->image;
-
     $this->status = $movie->status;
     $this->order = $movie->order;
 
-
     // Seleccionar los géneros que fueron elegidos
     $this->genres = $movie->genres()->pluck('genre_id')->toArray();
+    // Seleccionar los actores que fueron elegidos
+    $this->actors = $movie->actors()->pluck('actor_id')->toArray();
+    // Seleccionar los directores que fueron elegidos
+    $this->directors = $movie->directors()->pluck('director_id')->toArray();
 
     $this->showModal();
   }
@@ -231,7 +233,10 @@ class Movies extends Component
         'status' => $status_now,
       ]);
 
-      $movie->genres()->sync($this->genres);
+      $movie->genres()->sync($this->genres); //sincronizar géneros
+      $movie->actors()->sync($this->actors); // sincronizar actores
+      $movie->directors()->sync($this->directors); // sincronizar directores
+
       // cerrar modal
       $this->closeModal();
       //limpiar campos
@@ -262,7 +267,13 @@ class Movies extends Component
   public function destroy($id)
   {
     try {
-      Movie::destroy($id);
+      // Buscar la película para eliminar la imágen y desasociar tablas pibot antes de eliminarla
+      $movie = Movie::findOrFail($id);
+      if (Storage::exists('movies/' . $movie->image)) {
+        Storage::delete('movies/' . $movie->image);
+      }
+      $movie->genres()->detach(); // eliminar registros asociados
+      $movie->delete(); //eliminar la pelicula
       // actualizar tabla
       $this->dispatch('refreshDatatable')->to(MovieTable::class);
       // mostrar mensaje eliminacion correcta

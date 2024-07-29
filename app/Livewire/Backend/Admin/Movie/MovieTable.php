@@ -165,20 +165,22 @@ class MovieTable extends DataTableComponent
         ->sortable()
         ->searchable(),
       Column::make("Descripción", "description")
-        ->sortable(),
+        ->sortable()
+        ->isHidden(),
       Column::make("Género/s")
         ->label(fn ($row) => implode(' | ', $row->genres()->pluck('name')->toArray()))
         ->searchable(),
-      Column::make("Idioma", "language_id")
+      Column::make("Idioma", "language.name")
         ->sortable()
         ->searchable(),
-      Column::make("Duración", "duration")
+      Column::make("Duración (Min)", "duration")
         ->sortable(),
       Column::make("Año", "year")
         ->sortable()
         ->searchable(),
       Column::make("Votos", "votes")
-        ->sortable(),
+        ->sortable()
+        ->isHidden(),
       Column::make("Sección", "section")
         ->sortable(),
       ImageColumn::make("Imagen", 'image')
@@ -199,9 +201,9 @@ class MovieTable extends DataTableComponent
       //   ->sortable(),
       // Column::make("Director", "director_id")
       //   ->sortable(),
-      Column::make("Estudio", "cinema_id")
+      Column::make("Estudio", "cinema.name")
         ->sortable(),
-      Column::make("País", "country_id")
+      Column::make("País",  "country.name")
         ->sortable(),
       Column::make("Orden", "order")
         ->sortable(),

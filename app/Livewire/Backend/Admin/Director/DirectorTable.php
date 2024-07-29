@@ -67,7 +67,7 @@ class DirectorTable extends DataTableComponent
             ->orderBy('name')
             ->get()
             ->keyBy('id')
-            ->map(fn($tag) => $tag->name)
+            ->map(fn ($tag) => $tag->name)
             ->toArray()
         )
         ->setFirstOption('Todos los paises')
@@ -125,7 +125,7 @@ class DirectorTable extends DataTableComponent
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron eliminar los registros', icon: 'error');
     }
   }
@@ -146,7 +146,7 @@ class DirectorTable extends DataTableComponent
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
   }
@@ -167,7 +167,7 @@ class DirectorTable extends DataTableComponent
       // deseleccionar elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
   }
@@ -186,8 +186,8 @@ class DirectorTable extends DataTableComponent
         ->sortable()
         ->searchable(),
       ImageColumn::make('Bandera')
-        ->location(fn($row) => asset('storage/flags/' . $this->director->find($row->id)->country->flag))
-        ->attributes(fn($row) => [
+        ->location(fn ($row) => asset('storage/flags/' . $this->director->find($row->id)->country->flag))
+        ->attributes(fn ($row) => [
           'class' => 'w-16 object-cover',
         ]),
       Column::make("País", 'country.name')
@@ -199,7 +199,7 @@ class DirectorTable extends DataTableComponent
       Column::make("Acciones")
         ->label(
           function ($row) {
-            return view('livewire.backend.admin.directors.directors-actions', ['row' => $row->id, 'director' => $this->director->find($row->id),]);
+            return view('livewire.backend.admin.directors.directors-actions', ['row' => $row->id, 'director' => $this->director->find($row->id)]);
           }
         ),
     ];

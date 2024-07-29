@@ -884,7 +884,6 @@ input[type="date"] {
       @apply text-indigo-400;
     }
   }
-
 }
 
 .table-flag {
@@ -896,3 +895,7 @@ input[type="date"] {
   background-image: linear-gradient(to top right #000000 #000000, url('../../public/images/fondo_movie.png'));
 }
 
+.tool{
+  z-index: 100 !important;
+  color:red !important;
+}

@@ -1,5 +1,6 @@
-import './bootstrap';
+// import './bootstrap';
 import 'flowbite';
+
 
 document.addEventListener('DOMContentLoaded', () => {
   // Referencias
