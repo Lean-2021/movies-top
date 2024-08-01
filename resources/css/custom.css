@@ -20,13 +20,16 @@
 
 :root {
   scroll-behavior: smooth;
+  background-color: #202020;
+}
+
+body{
+  background-color: #111827 !important;
 }
 
 /*Color de fondo y texto de todo el sitio*/
 /* body {
-    background-color: #181419;
-    color: white;
-    scroll-behavior: smooth;
+  background-color: #181419;
 } */
 
 /*Estilos header*/
@@ -175,7 +178,7 @@ header {
 /*Sección buscar menú principal*/
 .main_search_container {
   margin: 70px auto;
-  opacity: 0;
+  /* opacity: 0; */
 }
 
 /*titulo search*/
@@ -898,4 +901,11 @@ input[type="date"] {
 .tool{
   z-index: 100 !important;
   color:red !important;
+}
+
+/* contenedor de detalle de película */
+
+.detail_container{
+  margin-top: 10vh;
+  /* height: 90vh; */
 }

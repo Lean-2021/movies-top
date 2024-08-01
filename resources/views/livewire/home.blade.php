@@ -21,28 +21,72 @@
         </section>
 
         <!-- Buscar películas -->
-        <section class="container text-center main_search_container py-24" id="searchContainer">
+        <section class="container py-24 text-center main_search_container">
             <h2 class="main_search_title">¿Qué estas buscando para ver?</h2>
             <!-- Formulario para buscar películas -->
             <div class="container max-w-xl mx-auto">
-                <form class="flex flex-col sm:flex-row mt-4 px-10 sm:px-0 items-center justify-center gap-4">
-                    <input type="search" name="search" id="search" placeholder="Buscar..."
-                        class="w-full h-12 rounded-md text-black px-5 border-4 border-[#9f3647] focus:border-2 focus:border-[#9f3647] focus:ring-2 focus:ring-[#9f3647] hover:ring-2 hover:ring-[#9f3647]" />
-                    <button type="button" value="Buscar"
-                        class="main_search_btn h-12 rounded-md border-2 border-slate-50 w-full sm:w-24">
+                <form class="flex flex-col items-center justify-center gap-4 px-10 mt-4 sm:flex-row sm:px-0">
+                    <input type="search" wire:model.live="search" id="search" placeholder="Buscar..."
+                        class="w-full relative h-12 rounded-md text-black px-5 border-4 border-[#9f3647] focus:border-2 focus:border-[#9f3647] focus:ring-2 focus:ring-[#9f3647] hover:ring-2 hover:ring-[#9f3647]" />
+                    <button type="button" value="Buscar" wire:click='searchByTitle'
+                        class="{{ $showResult && $search !== '' ? 'hidden' : 'block' }} w-full h-12 border-2 rounded-md main_search_btn border-slate-50 sm:w-24">
                         <span class="-ms-1">Buscar</span>
                     </button>
                 </form>
+                @if ($search && $showResult)
+                    <section class="p-2 mx-10 text-left bg-white rounded-md sm:mx-0">
+                        <ul class="text-gray-600 ms-2">
+                            @forelse ($searchMovies as $movie)
+                                <li class="cursor-pointer hover:text-gray-900"
+                                    wire:click="searchSelected('{{ $movie->title }}')">
+                                    {{ $movie->title }}
+                                </li>
+                            @empty
+                                <li>no hay coincidencias</li>
+                            @endforelse
+                        </ul>
+                    </section>
+                @endif
             </div>
         </section>
 
         <!-- Separar sección con línea -->
         <hr class="line_divisor" />
+        <section class="invisible" id="goToSearch"></section>
+        @if (!$showResult && count($moviesSearch) > 0)
+            {{-- sección search --}}
+            <section class="container grid min-h-screen grid-cols-1 mx-auto my-24 search-container"
+                id="searchContainer">
+                <h3 class="m-auto text-3xl text-center sm:text-4xl 2xl:text-6xl">Resultados</h3>
+                <h4 class="px-20 mt-4 text-lg text-center md:px-0">Resultados para la búsqueda con el término: <span
+                        class="text-gray-300">{{ $search }}</span></h4>
+                {{-- card de película --}}
+                <div class="flex flex-wrap justify-center gap-16 mb-24 mt-14 align-center">
+                    @foreach ($moviesSearch as $movie)
+                        <div class="trend_container w-[15rem]">
+                            <a href="{{ route('movies.detail', $movie->id) }}" class="trend_container_link">
+                                <img src="./images/peliculas/peli_1.jpg" alt="The Beekeeper" class="trend_image" />
+                                <div class="trend_container-hover">
+                                    <h4 class="trend_title-hover" title="The Beekeeper">
+                                        The Beekeeper
+                                    </h4>
+                                    <p class="trend_review-hover">⭐⭐⭐</p>
+                                    <img src="./images/film.ico" alt="icono pelicula" class="-mt-2 trend_image-hover" />
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <!-- Separar sección con línea -->
+            <hr class="line_divisor" />
+        @endif
 
         {{-- Sección Novedades --}}
-        <section class="container mx-auto min-h-screen grid grid-cols-1 my-24 novelties-container" id="novelties">
-            <h3 class="text-center m-auto text-3xl sm:text-4xl 2xl:text-6xl">Novedades</h3>
-            <div class="flex flex-wrap justify-center align-center gap-16 my-24">
+        <section class="container grid min-h-screen grid-cols-1 mx-auto my-24 novelties-container" id="novelties">
+            <h3 class="m-auto text-3xl text-center sm:text-4xl 2xl:text-6xl">Novedades</h3>
+            <div class="flex flex-wrap justify-center gap-16 my-24 align-center">
                 <div class="trend_container w-[15rem]">
                     <a href="#" class="trend_container_link">
                         <img src="./images/peliculas/peli_1.jpg" alt="The Beekeeper" class="trend_image" />
@@ -51,7 +95,7 @@
                                 The Beekeeper
                             </h4>
                             <p class="trend_review-hover">⭐⭐⭐</p>
-                            <img src="./images/film.ico" alt="icono pelicula" class="trend_image-hover -mt-2" />
+                            <img src="./images/film.ico" alt="icono pelicula" class="-mt-2 trend_image-hover" />
                         </div>
                     </a>
                 </div>
@@ -63,7 +107,7 @@
                                 The Beekeeper
                             </h4>
                             <p class="trend_review-hover">⭐⭐⭐</p>
-                            <img src="./images/film.ico" alt="icono pelicula" class="trend_image-hover -mt-2" />
+                            <img src="./images/film.ico" alt="icono pelicula" class="-mt-2 trend_image-hover" />
                         </div>
                     </a>
                 </div>
@@ -75,7 +119,7 @@
                                 The Beekeeper
                             </h4>
                             <p class="trend_review-hover">⭐⭐⭐</p>
-                            <img src="./images/film.ico" alt="icono pelicula" class="trend_image-hover -mt-2" />
+                            <img src="./images/film.ico" alt="icono pelicula" class="-mt-2 trend_image-hover" />
                         </div>
                     </a>
                 </div>
@@ -87,7 +131,7 @@
                                 The Beekeeper
                             </h4>
                             <p class="trend_review-hover">⭐⭐⭐</p>
-                            <img src="./images/film.ico" alt="icono pelicula" class="trend_image-hover -mt-2" />
+                            <img src="./images/film.ico" alt="icono pelicula" class="-mt-2 trend_image-hover" />
                         </div>
                     </a>
                 </div>
@@ -99,7 +143,7 @@
                                 The Beekeeper
                             </h4>
                             <p class="trend_review-hover">⭐⭐⭐</p>
-                            <img src="./images/film.ico" alt="icono pelicula" class="trend_image-hover -mt-2" />
+                            <img src="./images/film.ico" alt="icono pelicula" class="-mt-2 trend_image-hover" />
                         </div>
                     </a>
                 </div>
@@ -111,12 +155,12 @@
 
         <!-- Sección de películas Tendencias-->
         <!-- Contenedor Tendencias -->
-        <section class="container mx-auto min-h-screen grid grid-cols-1 trends_container my-24" id="trends">
+        <section class="container grid min-h-screen grid-cols-1 mx-auto my-24 trends_container" id="trends">
 
-            <h3 class="text-center text-3xl sm:text-4xl 2xl:text-6xl">Las tendencias de hoy</h3>
+            <h3 class="text-3xl text-center sm:text-4xl 2xl:text-6xl">Las tendencias de hoy</h3>
 
             <!-- Contenedor Películas    -->
-            <div class="flex flex-wrap justify-center align-center gap-14 my-24">
+            <div class="flex flex-wrap justify-center my-24 align-center gap-14">
                 <!-- Pelicula 1 -->
                 <div class="trend_container">
                     <a href="#" class="trend_container_link">
@@ -270,7 +314,7 @@
             </div>
             <!-- Fin peliculas tendencias-->
             <!-- Botones anterior - siguiente -->
-            <div class="flex gap-4 justify-center items-center my-12">
+            <div class="flex items-center justify-center gap-4 my-12">
                 <button class="main_trends_btn" id="btnTrendPrev">Anterior</button>
                 <button class="main_trends_btn" id="btnTrendNext">Siguiente</button>
             </div>
@@ -282,18 +326,18 @@
 
         <!-- Las más aclamadas -->
         <section
-            class="relative container mx-auto sm:min-h-screen grid grid-cols-1 overflow-hidden main_acclaimed my-28 sm:my-10"
+            class="container relative grid grid-cols-1 mx-auto overflow-hidden sm:min-h-screen main_acclaimed my-28 sm:my-10"
             id="acclaimeds">
-            <h3 class="text-center text-3xl sm:text-4xl 2xl:text-6xl m-auto">Las más aclamadas</h3>
+            <h3 class="m-auto text-3xl text-center sm:text-4xl 2xl:text-6xl">Las más aclamadas</h3>
 
             <!-- Contenedor aclamadas -->
             <div class="flex gap-[1rem] my-16 sm:my-0 sm:gap-[2rem] items-start acclaimeds_container px-3 sm:px-0 group/acclaimeds"
                 id="acclaimedsContainer">
-                <div class="absolute hidden sm:block w-full sm:min-h-screen items-center mt-24">
-                    <button class="absolute left-8 w-10 h-10 z-10 acclaimed_btn" id="acclaimedBtnPrev">
+                <div class="absolute items-center hidden w-full mt-24 sm:block sm:min-h-screen">
+                    <button class="absolute z-10 w-10 h-10 left-8 acclaimed_btn" id="acclaimedBtnPrev">
                         <i class="fa-solid fa-angle-left"></i>
                     </button>
-                    <button class="absolute right-8 w-10 h-10 acclaimed_btn z-10" id="acclaimedBtnNext">
+                    <button class="absolute z-10 w-10 h-10 right-8 acclaimed_btn" id="acclaimedBtnNext">
                         <i class="fa-solid fa-angle-right"></i>
                     </button>
                 </div>
@@ -376,12 +420,12 @@
     </main>
     <!-- Fin contenido principal -->
     <!-- Footer - Links de navegación - Botón ir a top  -->
-    <footer>
+    {{-- <footer>
         <!-- links de navagación - footer -->
-        <div class="container mx-auto py-5 relative">
-            <nav class="w-full mx-auto flex justify-center items-center py-10">
+        <div class="container relative py-5 mx-auto">
+            <nav class="flex items-center justify-center w-full py-10 mx-auto">
                 <ul
-                    class="w-full footer_list_links flex flex-col sm:flex-row items-center gap-y-5 sm:gap-y-0 justify-center sm:justify-around">
+                    class="flex flex-col items-center justify-center w-full footer_list_links sm:flex-row gap-y-5 sm:gap-y-0 sm:justify-around">
                     <li class="footer_item">
                         <a href="#" class="footer_link">Términos y condiciones</a>
                     </li>
@@ -394,14 +438,11 @@
                     <li class="footer_item">
                         <a href="#" class="footer_link">Contáctanos</a>
                     </li>
-                    {{--                        <li class="footer_item"> --}}
-                    {{--                            <a href="#" class="footer_link-active">Administrador Peliculas</a> --}}
-                    {{--                        </li> --}}
                 </ul>
             </nav>
 
             <!-- CopyRight -->
-            <div class="w-full text-center bottom-0 absolute">
+            <div class="absolute bottom-0 w-full text-center">
                 <p class="footer_copyRight">&copy; CAC - Leandro Wagner - 2024</p>
             </div>
         </div>
@@ -410,8 +451,5 @@
         <a class="btn_top" id="btnTop" wire:click="$dispatch('clean-section')">
             <img src="./images/flecha-hacia-arriba.svg" alt="Ir arriba flecha" class="btn_top_image" />
         </a>
-    </footer>
-    <!-- Fin footer-->
-    <!-- Enlace script index.js-->
-    {{--        <script src="./js/index.js"></script> --}}
+    </footer> --}}
 </div>

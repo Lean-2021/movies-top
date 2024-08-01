@@ -64,7 +64,7 @@ class Movies extends Component
       'languages' => $languages,
       'actors_movie' => $actors,
       'directors_movie' => $directors,
-      'cinemas' => $cinemas
+      'cinemas' => $cinemas,
     ]);
   }
 

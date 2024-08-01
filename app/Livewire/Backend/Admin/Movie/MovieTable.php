@@ -7,6 +7,7 @@ use Livewire\Attributes\On;
 use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use App\Models\Movie;
+use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Columns\BooleanColumn;
 use Rappasoft\LaravelLivewireTables\Views\Columns\ImageColumn;
 use Rappasoft\LaravelLivewireTables\Views\Filters\MultiSelectDropdownFilter;
@@ -57,23 +58,6 @@ class MovieTable extends DataTableComponent
           } elseif ($value === '0') {
             $builder->where('status', 0);
           }
-        }),
-
-      // ordenar por pais
-      MultiSelectDropdownFilter::make('País')
-        ->options(
-          Country::query()
-            ->orderBy('name')
-            ->get()
-            ->keyBy('id')
-            ->map(fn ($tag) => $tag->name)
-            ->toArray()
-        )
-        ->setFirstOption('Todos los paises')
-        ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, $values) {
-          $builder->whereHas('country', function ($query) use ($values) {
-            $query->whereIn('country_id', $values);
-          });
         }),
     ];
   }
@@ -204,7 +188,8 @@ class MovieTable extends DataTableComponent
       Column::make("Estudio", "cinema.name")
         ->sortable(),
       Column::make("País",  "country.name")
-        ->sortable(),
+        ->sortable()
+        ->searchable(),
       Column::make("Orden", "order")
         ->sortable(),
       BooleanColumn::make("Activo", "status")

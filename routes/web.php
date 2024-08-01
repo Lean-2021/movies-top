@@ -6,11 +6,15 @@ use App\Livewire\Backend\Admin\Actor\Actors;
 use App\Livewire\Backend\Admin\Cinema\Cinemas;
 use App\Livewire\Backend\Admin\Genre\Genres;
 use App\Livewire\Backend\Admin\Movie\Movies;
+use App\Livewire\Frontend\MovieDetail;
 use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', Home::class)->name('home');
+
+// Ruta para mostrar el detalle de la película
+Route::get('/movie/{id}/detail', MovieDetail::class)->name('movies.detail');
 
 
 Route::middleware([

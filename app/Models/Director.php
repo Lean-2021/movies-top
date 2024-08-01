@@ -40,4 +40,10 @@ class Director extends Model
   {
     return $this->belongsToMany(Movie::class, 'director_movie');
   }
+
+  // Obtener el nombre y apellido combinados
+  public function getFullNameAttribute()
+  {
+    return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
+  }
 }

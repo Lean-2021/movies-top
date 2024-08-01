@@ -235,7 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
       {element: document.querySelector("#searchContainer"), section: 'home'},
       {element: document.querySelector("#novelties"), section: 'novelties'},
       {element: document.querySelector('#trends'), section: 'trends'},
-      {element: document.querySelector('#acclaimeds'), section: 'acclaimeds'}
+      {element: document.querySelector('#acclaimeds'), section: 'acclaimeds'},
+      {element: document.querySelector('#goToSearch'), section: 'home'}
     ];
 
     const scrollPos = window.scrollY;
@@ -251,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check if the container is in the viewport
         if (adjustedTop < windowHeight && adjustedBottom > 0) {
-          Livewire.dispatch('select-section', [container.section]); // Use 'emit' instead of 'dispatch'
+          Livewire.dispatch('select-section', [container.section]);
           container.element.classList.add('anim_slice_up');
         } else {
           container.element.classList.remove('anim_slice_up');
@@ -310,4 +311,12 @@ Livewire.on('deleteSelected', (event) => {
       Livewire.dispatch('destroyAll', {selected: event});
     }
   });
+});
+
+// Ir a la sección de búsqueda si hay resultados
+Livewire.on('scrollToSearch',()=>{
+  let goToSearch = document.getElementById('goToSearch');
+  if(goToSearch){
+    goToSearch.scrollIntoView({behavior:'smooth'});
+  };
 });
