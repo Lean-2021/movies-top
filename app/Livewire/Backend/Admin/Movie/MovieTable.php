@@ -17,6 +17,7 @@ class MovieTable extends DataTableComponent
 {
   protected $model = Movie::class;
   protected $movie;
+  public $showPreview = false;
 
   public function configure(): void
   {
@@ -71,6 +72,19 @@ class MovieTable extends DataTableComponent
       'delete' => 'Eliminar Todos'
     ];
   }
+
+  public function openModalPreview($id)
+  {
+    $this->showPreview = true;
+    $this->movie = Movie::findOrFail($id);
+//    dd($th->movie);
+  }
+
+  public function closeModalPreview()
+  {
+    $this->showPreview = false;
+  }
+
 
   // LLamar al método edit del controlador director
   public function edit($row)
@@ -141,7 +155,7 @@ class MovieTable extends DataTableComponent
 
   public function columns(): array
   {
-    $this->movie = Movie::all();
+//    $this->movie = Movie::all();
     return [
       Column::make("Id", "id")
         ->sortable(),
@@ -152,7 +166,7 @@ class MovieTable extends DataTableComponent
         ->sortable()
         ->isHidden(),
       Column::make("Género/s")
-        ->label(fn ($row) => implode(' | ', $row->genres()->pluck('name')->toArray()))
+        ->label(fn($row) => implode(' | ', $row->genres()->pluck('name')->toArray()))
         ->searchable(),
       Column::make("Idioma", "language.name")
         ->sortable()
@@ -174,7 +188,7 @@ class MovieTable extends DataTableComponent
             return $movie->image && asset('storage/movies/' . $movie->image) ? asset('storage/movies/' . $movie->image) : asset('images/no-available.png');
           }
         )
-        ->attributes(fn ($row) => [
+        ->attributes(fn($row) => [
           'class' => 'w-10 h-10 object-cover',
         ]),
       Column::make("Image url", "image_url")
@@ -187,7 +201,7 @@ class MovieTable extends DataTableComponent
       //   ->sortable(),
       Column::make("Estudio", "cinema.name")
         ->sortable(),
-      Column::make("País",  "country.name")
+      Column::make("País", "country.name")
         ->sortable()
         ->searchable(),
       Column::make("Orden", "order")
@@ -197,7 +211,12 @@ class MovieTable extends DataTableComponent
       Column::make("Acciones")
         ->label(
           function ($row) {
-            return view('livewire.backend.admin.movie.movies-actions', ['row' => $row->id, 'movie' => $this->movie->find($row->id),]);
+            return view('livewire.backend.admin.movie.movies-actions',
+              [
+                'row' => $row->id,
+                'showPreview' => $this->showPreview,
+                'movie' => $this->movie,
+              ]);
           }
         ),
     ];

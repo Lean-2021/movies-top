@@ -10,6 +10,7 @@ use Livewire\Livewire;
 class Home extends Component
 {
   public $search = '';
+  public $searchResult = '';
   public $moviesSearch = [];
   public $searchMovies = [];
   public $showResult = false;
@@ -29,6 +30,7 @@ class Home extends Component
     $this->searchMovies = Movie::where('title', 'like', '%' . $this->search . '%')->get();
     $this->showResult = $this->searchMovies->isNotEmpty();
   }
+
   // en el menú de busqueda al hacer click sobre una coincidencia asignarle el valor al input
   public function searchSelected($item)
   {
@@ -42,5 +44,7 @@ class Home extends Component
     $this->dispatch('scrollToSearch');
     $this->moviesSearch = Movie::where('title', 'like', '%' . $this->search . '%')->get();
     $this->showResult = false;
+    $this->searchResult = $this->search;
+    $this->search = '';
   }
 }

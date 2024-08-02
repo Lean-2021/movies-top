@@ -16,6 +16,7 @@
 .html_back {
   scrollbar-color: #03738c transparent;
   scrollbar-width: thin;
+  background-color: #111827 !important;
 }
 
 :root {

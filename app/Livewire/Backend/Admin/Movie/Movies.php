@@ -250,7 +250,7 @@ class Movies extends Component
         $this->dispatch('create', message: 'Película modificada', icon: 'success');
       }
     } catch (\Throwable $th) {
-      dd($th->getMessage());
+//      dd($th->getMessage());
       if ($this->action === 'create') {
         $this->dispatch('create', message: 'No se puedo crear la película', icon: 'error');
       } else if ($this->action === 'edit') {
