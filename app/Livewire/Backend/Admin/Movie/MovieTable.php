@@ -73,13 +73,14 @@ class MovieTable extends DataTableComponent
     ];
   }
 
+//  Mostrar modal de vista previa pasando la pelicula correspondiente
   public function openModalPreview($id)
   {
     $this->showPreview = true;
     $this->movie = Movie::findOrFail($id);
-//    dd($th->movie);
   }
 
+//  Cerrar modal de vista previa
   public function closeModalPreview()
   {
     $this->showPreview = false;
