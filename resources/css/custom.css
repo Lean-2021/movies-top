@@ -330,14 +330,16 @@ footer {
 /* Contenedor de pelicula */
 .trend_container {
   position: relative;
-  width: 200px;
+  width: 250px;
   max-height: 400px;
+  min-height: 400px;
   overflow: hidden;
 }
 
 /* imágen de pelicula */
 .trend_image {
   width: 100%;
+  height:100%;
   object-fit: cover;
   border-radius: 15px;
   transition: all ease-in-out 300ms;
@@ -383,9 +385,12 @@ footer {
 
 /* Imágen en efecto hover */
 .trend_image-hover {
-  width: 40%;
+  width: 80px;
+  height:100px;
   margin-top: 1rem;
-  filter: contrast(60%);
+  border-radius: 10px;
+  object-fit: cover;
+  filter: sepia(100%);
   transform: rotateY(-180deg);
   transition: transform ease-in-out 1s;
 }
@@ -419,8 +424,11 @@ footer {
 
 /* Contenedor de pelicula */
 .acclaimed_container {
-  /*width: 12rem;*/
-  min-width: 10rem;
+  /* width: ; */
+  max-width: 10rem;
+  height:240px;
+  cursor: pointer;
+  z-index: 5;
 }
 
 
@@ -440,7 +448,12 @@ footer {
 /* Imagen aclamadas */
 .acclaimed_image {
   width: 100%;
-  object-fit: contain;
+  height: 100%;
+  /* height: 280px; */
+  /* height:280px; */
+  /* cursor: pointer; */
+  object-fit: cover;
+  /* z-index: 5; */
   border-radius: 10px;
 }
 
@@ -909,4 +922,9 @@ input[type="date"] {
 .detail_container{
   margin-top: 10vh;
   /* height: 90vh; */
+}
+
+/* Imágen detalle de película */
+.image_detail{
+  box-shadow: 0 0 8px 0.5px #e4e2e2;
 }

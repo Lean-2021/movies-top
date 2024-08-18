@@ -17,6 +17,7 @@ class ActorTable extends DataTableComponent
 {
   protected $model = Actor::class;
   protected $actor;
+  public $showPreview = false;
 
   public function configure(): void
   {
@@ -60,32 +61,32 @@ class ActorTable extends DataTableComponent
           }
         }),
 
-      // ordenar por pais
-      MultiSelectDropdownFilter::make('País')
-        ->options(
-          Country::query()
-            ->orderBy('name')
-            ->get()
-            ->keyBy('id')
-            ->map(fn($tag) => $tag->name)
-            ->toArray()
-        )
-        ->setFirstOption('Todos los paises')
-        ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, $values) {
-          $builder->whereHas('country', function ($query) use ($values) {
-            $query->whereIn('country_id', $values);
-          });
-        }),
+      // // ordenar por pais
+      // MultiSelectDropdownFilter::make('País')
+      //   ->options(
+      //     Country::query()
+      //       ->orderBy('name')
+      //       ->get()
+      //       ->keyBy('id')
+      //       ->map(fn($tag) => $tag->name)
+      //       ->toArray()
+      //   )
+      //   ->setFirstOption('Todos los paises')
+      //   ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, $values) {
+      //     $builder->whereHas('country', function ($query) use ($values) {
+      //       $query->whereIn('country_id', $values);
+      //     });
+      //   }),
 
       // buscar por apellido
-      TextFilter::make('Apellido')
-        ->config([
-          'placeholder' => 'Buscar por apellido',
-          'maxlength' => '25',
-        ])
-        ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, string $value) {
-          $builder->where('last_name', 'like', '%' . $value . '%');
-        }),
+      // TextFilter::make('Apellido')
+      //   ->config([
+      //     'placeholder' => 'Buscar por apellido',
+      //     'maxlength' => '25',
+      //   ])
+      //   ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, string $value) {
+      //     $builder->where('last_name', 'like', '%' . $value . '%');
+      //   }),
     ];
   }
 
@@ -125,7 +126,7 @@ class ActorTable extends DataTableComponent
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron eliminar los registros', icon: 'error');
     }
   }
@@ -143,7 +144,7 @@ class ActorTable extends DataTableComponent
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
   }
@@ -164,15 +165,27 @@ class ActorTable extends DataTableComponent
       // deseleccionar elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
+  }
+
+  // Mostrar modal de vista previa
+  public function openPreview($id)
+  {
+    $this->showPreview = true;
+    $this->actor = Actor::findOrFail($id);
+  }
+
+  // cerrar modal de vista previa
+  public function closePreview()
+  {
+    $this->showPreview = false;
   }
 
   // construir la tabla directores
   public function columns(): array
   {
-    $this->actor = Actor::all();
     return [
       Column::make("Id", "id")
         ->sortable(),
@@ -183,12 +196,16 @@ class ActorTable extends DataTableComponent
         ->sortable()
         ->searchable(),
       ImageColumn::make('Bandera')
-        ->location(fn($row) => asset('storage/flags/' . $this->actor->find($row->id)->country->flag))
+        ->location(function ($row) {
+          $actors = Actor::all();
+          return asset('storage/flags/' . $actors->find($row->id)->country->flag);
+        })
         ->attributes(fn($row) => [
           'class' => 'w-16 object-cover',
         ]),
       Column::make("País", 'country.name')
-        ->sortable(),
+        ->sortable()
+        ->searchable(),
       Column::make("Orden", "order")
         ->sortable(),
       BooleanColumn::make("Activo", "status")
@@ -196,7 +213,7 @@ class ActorTable extends DataTableComponent
       Column::make("Acciones")
         ->label(
           function ($row) {
-            return view('livewire.backend.admin.actor.actors-actions', ['row' => $row->id, 'actor' => $this->actor->find($row->id),]);
+            return view('livewire.backend.admin.actor.actors-actions', ['row' => $row->id, 'showPreview' => $this->showPreview, 'actor' => $this->actor]);
           }
         ),
     ];

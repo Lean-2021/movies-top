@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckAdminRole;
 use App\Livewire\Backend\Admin\Dashboard;
 use App\Livewire\Backend\Admin\Director\Directors;
 use App\Livewire\Backend\Admin\Actor\Actors;
@@ -21,6 +22,7 @@ Route::middleware([
   'auth:sanctum',
   config('jetstream.auth_session'),
   'verified',
+  CheckAdminRole::class,
 ])->prefix('admin')->group(function () {
   // Dashboard
   Route::get('/', Dashboard::class)->name('dashboard');

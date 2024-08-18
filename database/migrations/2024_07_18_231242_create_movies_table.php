@@ -18,7 +18,7 @@ return new class extends Migration
       $table->foreignId('language_id')->constrained('languages', 'id');
       $table->integer('duration');
       $table->integer('year');
-      $table->bigInteger('votes')->nullable();
+      $table->bigInteger('votes')->nullable()->default(0);
       $table->enum('section', ['general', 'novedades', 'tendencias', 'aclamadas'])->default('general');
       $table->string('image', 80);
       $table->string('image_url')->nullable();

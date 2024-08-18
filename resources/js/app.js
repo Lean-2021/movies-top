@@ -320,3 +320,11 @@ Livewire.on('scrollToSearch',()=>{
     goToSearch.scrollIntoView({behavior:'smooth'});
   };
 });
+
+// Ir a novedades cuando se borren los resultados de búsqueda
+Livewire.on('scrollToSeachContainer',()=>{
+  let gotToSearchContainer = document.querySelector('#searchContainer');
+  if(gotToSearchContainer){
+    gotToSearchContainer.scrollIntoView({behavior: 'smooth'});
+  };
+});

@@ -250,7 +250,7 @@ class Movies extends Component
         $this->dispatch('create', message: 'Película modificada', icon: 'success');
       }
     } catch (\Throwable $th) {
-//      dd($th->getMessage());
+      //      dd($th->getMessage());
       if ($this->action === 'create') {
         $this->dispatch('create', message: 'No se puedo crear la película', icon: 'error');
       } else if ($this->action === 'edit') {
@@ -272,7 +272,9 @@ class Movies extends Component
       if (Storage::exists('movies/' . $movie->image)) {
         Storage::delete('movies/' . $movie->image);
       }
-      $movie->genres()->detach(); // eliminar registros asociados
+      $movie->genres()->detach(); // eliminar registros asociados de géneros
+      $movie->actors()->detach(); // eliminar registros asociados de actores
+      $movie->directors()->detach(); // eliminar registros asociados de directores
       $movie->delete(); //eliminar la pelicula
       // actualizar tabla
       $this->dispatch('refreshDatatable')->to(MovieTable::class);

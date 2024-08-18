@@ -56,7 +56,7 @@
             {{--        </header> --}}
             <!-- Fin encabezado-->
             <!-- Contenido principal del sitio -->
-            <main>
+            <main class="min-h-screen">
                 {{ $slot }}
             </main>
         </div>

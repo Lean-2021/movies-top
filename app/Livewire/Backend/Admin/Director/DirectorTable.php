@@ -17,6 +17,7 @@ class DirectorTable extends DataTableComponent
 {
   protected $model = Director::class;
   protected $director;
+  public $showPreview = false;
 
   public function configure(): void
   {
@@ -31,6 +32,19 @@ class DirectorTable extends DataTableComponent
   public function refreshTable()
   {
     '$refresh';
+  }
+
+  // Mostrar vista previa
+  public function openPreview($id)
+  {
+    $this->showPreview = true;
+    $this->director = Director::findOrFail($id);
+  }
+
+  // Cerrar vista previa
+  public function closePreview()
+  {
+    $this->showPreview = false;
   }
 
   // Cambiar el numero de orden entre registros
@@ -58,33 +72,6 @@ class DirectorTable extends DataTableComponent
           } elseif ($value === '0') {
             $builder->where('status', 0);
           }
-        }),
-
-      // ordenar por pais
-      MultiSelectDropdownFilter::make('País')
-        ->options(
-          Country::query()
-            ->orderBy('name')
-            ->get()
-            ->keyBy('id')
-            ->map(fn ($tag) => $tag->name)
-            ->toArray()
-        )
-        ->setFirstOption('Todos los paises')
-        ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, $values) {
-          $builder->whereHas('country', function ($query) use ($values) {
-            $query->whereIn('country_id', $values);
-          });
-        }),
-
-      // Buscar por apellido
-      TextFilter::make('Apellido')
-        ->config([
-          'placeholder' => 'Buscar por apellido',
-          'maxlength' => '25',
-        ])
-        ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, string $value) {
-          $builder->where('last_name', 'like', '%' . $value . '%');
         }),
     ];
   }
@@ -175,7 +162,7 @@ class DirectorTable extends DataTableComponent
   // construir la tabla directores
   public function columns(): array
   {
-    $this->director = Director::all();
+    // $this->director = Director::all();
     return [
       Column::make("Id", "id")
         ->sortable(),
@@ -186,12 +173,16 @@ class DirectorTable extends DataTableComponent
         ->sortable()
         ->searchable(),
       ImageColumn::make('Bandera')
-        ->location(fn ($row) => asset('storage/flags/' . $this->director->find($row->id)->country->flag))
-        ->attributes(fn ($row) => [
+        ->location(function ($row) {
+          $director = Director::findOrFail($row->id);
+          return asset('storage/flags/' . $director->country->flag);
+        })
+        ->attributes(fn($row) => [
           'class' => 'w-16 object-cover',
         ]),
       Column::make("País", 'country.name')
-        ->sortable(),
+        ->sortable()
+        ->searchable(),
       Column::make("Orden", "order")
         ->sortable(),
       BooleanColumn::make("Activo", "status")
@@ -199,7 +190,14 @@ class DirectorTable extends DataTableComponent
       Column::make("Acciones")
         ->label(
           function ($row) {
-            return view('livewire.backend.admin.directors.directors-actions', ['row' => $row->id, 'director' => $this->director->find($row->id)]);
+            return view(
+              'livewire.backend.admin.directors.directors-actions',
+              [
+                'row' => $row->id,
+                'showPreview' => $this->showPreview,
+                'director' => $this->director,
+              ]
+            );
           }
         ),
     ];

@@ -3,12 +3,24 @@
 <div class="container mx-auto detail_container">
     <div class="grid grid-cols-1 p-10 md:grid-cols-2 md:gap-x-10 lg:gap-x-2">
         <div>
-            <img src="{{ asset('images/peliculas/aclamada_1.jpg') }}" alt="imágen de la película"
-                class="object-cover w-full m-auto rounded-lg md:w-96">
+            <img src="{{ $movie->image && storage_path('movies/' . $movie->image) ? asset('storage/movies/' . $movie->image) : asset('images/no-available.png') }}"
+                alt="imágen de la película"
+                class="image_detail object-cover object-center w-full m-auto rounded-lg h-[600px] md:w-96">
         </div>
+        @php
+            $movies_votes = $movies_votes ?? [];
+        @endphp
         <div class="mt-10 md:mt-0">
             <h1 class="mb-3 text-3xl">{{ Str::title($movie->title) }}</h1>
-            <p class="mb-3">⭐⭐⭐⭐⭐ <span class="text-gray-400">(5430 votos)</span></p>
+            <p class="mb-3">{{ stars_movies($votes) }} <span class="text-gray-400">({{ $votes }}
+                    {{ $votes === 1 ? ' voto' : ' votos' }})</span><button class="disabled:cursor-not-allowed"
+                    @if (Auth::check()) wire:click='add_votes({{ $movie->id }}) @else wire:click='redirectLogin' @endif
+                    {{ in_array($movie->id, $movies_votes ?? []) ? 'disabled' : '' }}><i
+                        class="align-middle ms-2 {{ in_array($movie->id, $movies_votes ?? []) ? 'fa-solid text-red-500' : 'fa-regular' }} fa-heart"></i></button>
+                @if (in_array($movie->id, $movies_votes ?? []))
+                    <span class="text-gray-400">Ya votaste!</span>
+                @endif
+            </p>
             <p class="mb-3">Año: <span class="text-gray-400">{{ $movie->year }}</span></p>
             <p class="mb-3">Duración: <span class="text-gray-400">{{ $movie->duration }} min</span></p>
             <p class="mb-3">Género: <span
