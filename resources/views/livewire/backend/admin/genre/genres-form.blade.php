@@ -1,7 +1,7 @@
 <div>
     <!-- Main modal -->
     <div id="crud-modal" tabindex="-1" aria-hidden="true"
-        class="{{ !$openModal ? 'hidden' : '' }} overflow-y-auto overflow-x-hidden fixed z-50 justify-center bg-gray-900/95 content-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        class="{{ !$openModal ? 'hidden' : '' }} overflow-y-auto overflow-x-hidden fixed z-50 justify-center bg-gray-900/95 content-center w-full inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative max-w-xl max-h-full p-4 m-auto">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">

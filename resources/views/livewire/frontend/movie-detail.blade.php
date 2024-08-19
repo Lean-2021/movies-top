@@ -14,7 +14,7 @@
             <h1 class="mb-3 text-3xl">{{ Str::title($movie->title) }}</h1>
             <p class="mb-3">{{ stars_movies($votes) }} <span class="text-gray-400">({{ $votes }}
                     {{ $votes === 1 ? ' voto' : ' votos' }})</span><button class="disabled:cursor-not-allowed"
-                    @if (Auth::check()) wire:click='add_votes({{ $movie->id }}) @else wire:click='redirectLogin' @endif
+                    @if (Auth::check()) wire:click="add_votes({{ $movie->id }})" @else wire:click="redirectLogin" @endif
                     {{ in_array($movie->id, $movies_votes ?? []) ? 'disabled' : '' }}><i
                         class="align-middle ms-2 {{ in_array($movie->id, $movies_votes ?? []) ? 'fa-solid text-red-500' : 'fa-regular' }} fa-heart"></i></button>
                 @if (in_array($movie->id, $movies_votes ?? []))

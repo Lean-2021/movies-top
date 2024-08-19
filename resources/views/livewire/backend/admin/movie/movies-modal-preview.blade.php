@@ -1,6 +1,6 @@
 <!-- Main modal -->
 <div tabindex="-1" aria-hidden="true"
-    class="{{ $showPreview ? 'block' : 'hidden' }} overflow-y-auto overflow-x-hidden fixed z-50 place-content-center bg-gray-800/80 w-full inset-0 md:inset-0 max-h-full">
+    class="{{ $showPreview ? 'block' : 'hidden' }} overflow-y-auto overflow-x-hidden fixed z-50 place-content-center bg-gray-800/90 w-full inset-0 md:inset-0 max-h-full">
     <div class="relative flex items-center w-full max-w-lg m-auto">
         <!-- Modal content -->
         <div class="relative m-auto rounded-lg shadow dark:bg-gray-700 drop-shadow-lg">

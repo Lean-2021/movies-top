@@ -18,6 +18,7 @@ class CinemaTable extends DataTableComponent
 {
   protected $model = Cinema::class;
   protected $cinema;
+  public $showPreview = false;
 
   public function configure(): void
   {
@@ -32,6 +33,19 @@ class CinemaTable extends DataTableComponent
   public function refreshTable()
   {
     '$refresh';
+  }
+
+  // Abrir modal Vista Previa
+  public function openPreview($id)
+  {
+    $this->cinema = Cinema::findOrFail($id);
+    $this->showPreview = true;
+  }
+
+  // Cerrar modal vista previa
+  public function closePreview()
+  {
+    $this->showPreview = false;
   }
 
   // Cambiar el numero de orden entre registros
@@ -59,23 +73,6 @@ class CinemaTable extends DataTableComponent
           } elseif ($value === '0') {
             $builder->where('status', 0);
           }
-        }),
-
-      // ordenar por pais
-      MultiSelectDropdownFilter::make('País')
-        ->options(
-          Country::query()
-            ->orderBy('name')
-            ->get()
-            ->keyBy('id')
-            ->map(fn($tag) => $tag->name)
-            ->toArray()
-        )
-        ->setFirstOption('Todos los paises')
-        ->filter(function (\Illuminate\Database\Eloquent\Builder $builder, $values) {
-          $builder->whereHas('country', function ($query) use ($values) {
-            $query->whereIn('country_id', $values);
-          });
         }),
     ];
   }
@@ -116,7 +113,7 @@ class CinemaTable extends DataTableComponent
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron eliminar los registros', icon: 'error');
     }
   }
@@ -134,7 +131,7 @@ class CinemaTable extends DataTableComponent
       // deseleccionar todos los elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
   }
@@ -152,7 +149,7 @@ class CinemaTable extends DataTableComponent
       // deseleccionar elementos
       $this->clearSelected();
     } catch (\Throwable $th) {
-//        dd($th->getMessage());
+      //        dd($th->getMessage());
       $this->dispatch('create', message: 'No se pudieron actualizar los registros', icon: 'error');
     }
   }
@@ -160,7 +157,6 @@ class CinemaTable extends DataTableComponent
   // construir la tabla directores
   public function columns(): array
   {
-    $this->cinema = Cinema::all();
     return [
       Column::make("Id", "id")
         ->sortable(),
@@ -168,12 +164,16 @@ class CinemaTable extends DataTableComponent
         ->sortable()
         ->searchable(),
       ImageColumn::make('Bandera')
-        ->location(fn($row) => asset('storage/flags/' . $this->cinema->find($row->id)->country->flag))
+        ->location(function ($row) {
+          $cinema = Cinema::findOrFail($row->id);
+          return asset('storage/flags/' . $cinema->find($row->id)->country->flag);
+        })
         ->attributes(fn($row) => [
           'class' => 'w-16 object-cover',
         ]),
       Column::make("País", 'country.name')
-        ->sortable(),
+        ->sortable()
+        ->searchable(),
       Column::make("Orden", "order")
         ->sortable(),
       BooleanColumn::make("Activo", "status")
@@ -181,10 +181,9 @@ class CinemaTable extends DataTableComponent
       Column::make("Acciones")
         ->label(
           function ($row) {
-            return view('livewire.backend.admin.cinema.cinemas-actions', ['row' => $row->id, 'cinema' => $this->cinema->find($row->id),]);
+            return view('livewire.backend.admin.cinema.cinemas-actions', ['row' => $row->id, 'cinema' => $this->cinema, 'showPreview' => $this->showPreview]);
           }
         ),
     ];
   }
-
 }
