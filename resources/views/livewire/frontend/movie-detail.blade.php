@@ -48,4 +48,10 @@
                 {{ Str::ucfirst($movie->description) }}</p>
         </div>
     </div>
+    {{-- Botón volver --}}
+    <div class="w-full mt-10 mb-10 text-right md:mb-0">
+        <a href="{{ route('home') }}"
+            class="px-3 py-2 me-3 md:me-0 bg-[#9f3647] transition-colors duration-300 rounded-md hover:bg-[#882d3c]"><i
+                class="fa-solid fa-caret-left me-2"></i>Volver</a>
+    </div>
 </div>

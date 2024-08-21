@@ -30,6 +30,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+
         <!-- Styles -->
         @livewireStyles
     </head>
@@ -61,7 +62,10 @@
             </main>
         </div>
 
-        <footer>
+        {{-- Footer --}}
+        <livewire:footer />
+
+        {{-- <footer>
             <!-- links de navagación - footer -->
             <div class="container relative h-auto py-2 mx-auto md:h-32">
                 <nav class="flex items-center justify-center w-full py-10 mx-auto">
@@ -94,14 +98,15 @@
                     <img src="./images/flecha-hacia-arriba.svg" alt="Ir arriba flecha" class="btn_top_image" />
                 </a>
             @endif
-        </footer>
+        </footer> --}}
 
 
 
         @stack('modals')
 
         @livewireScripts
-        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
+        {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script> --}}
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
     </body>
 
 </html>

@@ -1,8 +1,8 @@
 // import './bootstrap';
 import 'flowbite';
 
-
 document.addEventListener('DOMContentLoaded', () => {
+
   // Referencias
   const btnMenuOpen = document.querySelector("#btnMenuOpen"); // referencia Botón abrir menú nav
   const btnMenuClose = document.querySelector("#btnMenuClose"); // referencia Botón cerrar menú nav
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     ;
   };
+
 
   //Evento scroll para llamar a función que muetra/oculta el botón top
   window.onscroll = () => showHideBtnTop();
@@ -328,3 +329,4 @@ Livewire.on('scrollToSeachContainer',()=>{
     gotToSearchContainer.scrollIntoView({behavior: 'smooth'});
   };
 });
+

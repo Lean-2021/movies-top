@@ -265,6 +265,7 @@ footer {
   color: white;
   font-weight: bold;
   text-decoration: none;
+  cursor: pointer;
   transition: all ease-in-out 500ms;
 }
 
